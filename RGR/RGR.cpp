@@ -17,7 +17,7 @@ const int TABLE_SIZE = 101;
 int hashFunction(const string& key) {
     int hash = 0;
     for (char c : key)
-        hash = (hash * 25 + tolower(c)) % TABLE_SIZE;
+        hash = (hash * 31 + tolower(c)) % TABLE_SIZE;
     return hash;
 }
 
@@ -99,12 +99,34 @@ string normalize(const string& word) {
     return clean;
 }
 
+pair<string,string> log() {
+    string choise1;
+    string choise2;
+    cout << "Какой текст?\n"
+        "1. Для РГР\n"
+        "2. Для души\n"
+        "?: ";
+    int ch;
+    cin >> ch;
+    if (ch == 1) {
+        return pair<string, string>("text.txt", "words.txt");
+    }
+    else if (ch == 2) {
+        return pair<string, string>("text2.txt", "words2.txt");
+    }
+    else {
+        cout << "Ни-ху-я, не попал! ВХВХВХВХХВ\n"
+            "Используем дефолт, прошу прощения!" << endl;
+        return pair<string, string>("text.txt", "words.txt");
+
+    }
+}
+
 int main() {
-
     setlocale(LC_ALL, "");
-
+    auto choise = log();
     string text;
-    ifstream textFile("text.txt");
+    ifstream textFile(choise.first);
     if (!textFile.is_open()) {
         cerr << "Ошибка открытия text.txt\n";
         return 1;
@@ -116,11 +138,12 @@ int main() {
     }
     textFile.close();
 
-    ifstream wordFile("words.txt");
+    ifstream wordFile(choise.second);
     if (!wordFile.is_open()) {
         cerr << "Ошибка открытия words.txt\n";
         return 1;
     }
+
 
     vector<string> words;
     string word;

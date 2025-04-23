@@ -10,6 +10,7 @@
 #include <windows.h>
 #include <fcntl.h>   // <-- для _O_U8TEXT
 #include <io.h>      // <-- для _setmode
+#include <typeinfo>
 
 using namespace std;
 
@@ -96,15 +97,25 @@ wstring normalize(const wstring& word) {
 
 pair<wstring, wstring> log() {
     wcout << L"Какой текст?\n1. Для РГР\n2. Для души\n?: ";
-    int ch;
-    wcin >> ch;
-    if (ch == 1) return { L"text.txt", L"words.txt" };
-    if (ch == 2) return { L"text2.txt", L"words2.txt" };
+    wstring input;
+    getline(wcin, input);
 
-    wcout << L"Ни-ху-я, не попал! ВХВХВХВХХВ\n"
-        L"Используем дефолт, прошу прощения!" << endl;
-    return { L"text.txt", L"words.txt" };
+    try {
+        int ch = stoi(input); 
+
+        if (ch == 1) return { L"text.txt", L"words.txt" };
+        if (ch == 2) return { L"text2.txt", L"words2.txt" };
+
+        wcout << L"Ни-ху-я, не попал! ВХВХВХВХХВ\n"
+            L"Используем дефолт, прошу прощения!" << endl;
+        return { L"text.txt", L"words.txt" };
+    }
+    catch (...) {
+        wcout << L"Это даже не число, что ты творишь?\n";
+        return log(); 
+    }
 }
+
 
 int main() {
     // Настройка консоли на UTF-8
